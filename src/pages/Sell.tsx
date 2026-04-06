@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import Header from '@/components/Header';
@@ -13,14 +13,22 @@ import { CATEGORIES, CONDITIONS } from '@/types/listing';
 import { toast } from 'sonner';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import { useAuth } from '@/hooks/useAuth';
 
 const Sell = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [form, setForm] = useState({
     title: '', brand: '', model: '', category: '', size: '',
-    condition: '', mileage: '', price: '', description: '',
-    seller_email: '', image_url: '',
+    condition: '', mileage: '', price: '', description: '', image_url: '',
   });
+
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error('Please sign in to post a listing');
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
 
   const update = (key: string, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
@@ -36,8 +44,9 @@ const Sell = () => {
         mileage: form.mileage ? parseInt(form.mileage) : null,
         price: parseFloat(form.price),
         description: form.description.trim() || null,
-        seller_email: form.seller_email.trim(),
+        seller_email: user!.email!,
         image_url: form.image_url.trim() || null,
+        user_id: user!.id,
       });
       if (error) throw error;
     },
@@ -50,7 +59,9 @@ const Sell = () => {
     },
   });
 
-  const canSubmit = form.title && form.brand && form.category && form.condition && form.price && form.seller_email;
+  const canSubmit = form.title && form.brand && form.category && form.condition && form.price;
+
+  if (loading || !user) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -114,11 +125,6 @@ const Sell = () => {
               <div className="space-y-1.5">
                 <Label htmlFor="price">Price ($) *</Label>
                 <Input id="price" type="number" step="0.01" placeholder="0.00" value={form.price} onChange={(e) => update('price', e.target.value)} />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="email">Your Email *</Label>
-                <Input id="email" type="email" placeholder="you@email.com" value={form.seller_email} onChange={(e) => update('seller_email', e.target.value)} />
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
