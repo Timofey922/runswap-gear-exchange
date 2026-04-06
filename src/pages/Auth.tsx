@@ -36,11 +36,11 @@ const Auth = () => {
           password: form.password,
           options: {
             data: { display_name: form.displayName },
-            emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
-        toast.success('Check your email to confirm your account!');
+        toast.success('Account created! Welcome to RunSwap.');
+        navigate('/');
       }
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
