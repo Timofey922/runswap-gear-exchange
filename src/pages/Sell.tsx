@@ -122,8 +122,8 @@ const Sell = () => {
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
-                <Label htmlFor="image_url">Image URL</Label>
-                <Input id="image_url" placeholder="https://..." value={form.image_url} onChange={(e) => update('image_url', e.target.value)} />
+                <Label>Photo</Label>
+                <ImageUpload value={form.image_url} onChange={(url) => update('image_url', url)} />
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
