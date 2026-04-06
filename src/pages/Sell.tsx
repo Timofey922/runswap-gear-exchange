@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { CATEGORIES, CONDITIONS } from '@/types/listing';
 import { toast } from 'sonner';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import ImageUpload from '@/components/ImageUpload';
 
 const Sell = () => {
   const navigate = useNavigate();
