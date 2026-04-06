@@ -30,6 +30,7 @@ export type Database = {
           size: string | null
           title: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           brand: string
@@ -46,6 +47,7 @@ export type Database = {
           size?: string | null
           title: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           brand?: string
@@ -61,6 +63,31 @@ export type Database = {
           seller_email?: string
           size?: string | null
           title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
           updated_at?: string
         }
         Relationships: []
