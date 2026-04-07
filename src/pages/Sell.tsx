@@ -13,6 +13,7 @@ import { CATEGORIES, CONDITIONS } from '@/types/listing';
 import { toast } from 'sonner';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import BrandInput from '@/components/BrandInput';
 import { useAuth } from '@/hooks/useAuth';
 
 const Sell = () => {
