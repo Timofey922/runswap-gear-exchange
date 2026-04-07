@@ -33,6 +33,13 @@ export const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'accessories', label: 'Accessories' },
 ];
 
+export const POPULAR_BRANDS = [
+  'Nike', 'Adidas', 'ASICS', 'Brooks', 'Saucony', 'New Balance',
+  'Hoka', 'On', 'Salomon', 'Altra', 'Mizuno', 'Puma',
+  'Under Armour', 'Garmin', 'Coros', 'Patagonia', 'The North Face',
+  'Tracksmith', 'Janji', 'Rabbit', 'Nathan', 'CamelBak',
+];
+
 export const CONDITIONS: { value: Condition; label: string }[] = [
   { value: 'new', label: 'New' },
   { value: 'like-new', label: 'Like New' },

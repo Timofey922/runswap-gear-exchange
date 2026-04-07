@@ -13,6 +13,7 @@ import { CATEGORIES, CONDITIONS } from '@/types/listing';
 import { toast } from 'sonner';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import BrandInput from '@/components/BrandInput';
 import { useAuth } from '@/hooks/useAuth';
 
 const Sell = () => {
@@ -84,7 +85,7 @@ const Sell = () => {
 
               <div className="space-y-1.5">
                 <Label htmlFor="brand">Brand *</Label>
-                <Input id="brand" placeholder="e.g. Nike" value={form.brand} onChange={(e) => update('brand', e.target.value)} />
+                <BrandInput value={form.brand} onChange={(v) => update('brand', v)} placeholder="e.g. Nike" />
               </div>
 
               <div className="space-y-1.5">

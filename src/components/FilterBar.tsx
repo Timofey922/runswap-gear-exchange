@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, X } from 'lucide-react';
+import BrandInput from '@/components/BrandInput';
 import { CATEGORIES, CONDITIONS, type ListingFilters } from '@/types/listing';
 
 interface Props {
@@ -49,11 +50,11 @@ const FilterBar = ({ filters, onChange }: Props) => {
           </SelectContent>
         </Select>
 
-        <Input
+        <BrandInput
+          value={filters.brand}
+          onChange={(v) => update('brand', v)}
           placeholder="Brand"
           className="w-[120px] h-9 text-sm"
-          value={filters.brand}
-          onChange={(e) => update('brand', e.target.value)}
         />
 
         <Input
