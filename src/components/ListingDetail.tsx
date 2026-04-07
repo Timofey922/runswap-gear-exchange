@@ -18,7 +18,7 @@ interface Props {
 const ListingDetail = ({ listing, open, onClose }: Props) => {
   if (!listing) return null;
 
-  const mailto = `mailto:${listing.seller_email}?subject=${encodeURIComponent(`Interested in: ${listing.title}`)}&body=${encodeURIComponent(`Hi, I'm interested in your listing "${listing.title}" on const mailto = `mailto:${listing.seller_email}?subject=${encodeURIComponent(`Interested in: ${listing.title}`)}&body=${encodeURIComponent(`Hi, I'm interested in your listing "${listing.title}" on PaceMarket. Is it still available?`)}`;. Is it still available?`)}`;
+  const mailto = `mailto:${listing.seller_email}?subject=${encodeURIComponent(`Interested in: ${listing.title}`)}&body=${encodeURIComponent(`Hi, I'm interested in your listing "${listing.title}" on PaceMarket. Is it still available?`)}`;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
