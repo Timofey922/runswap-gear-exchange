@@ -25,6 +25,11 @@ const Header = () => {
         <div className="flex items-center gap-2">
           {user ? (
             <>
+              <Link to="/messages">
+                <Button variant="ghost" size="icon" className="rounded-full relative">
+                  <MessageCircle className="h-4 w-4" />
+                </Button>
+              </Link>
               <Link to="/sell">
                 <Button size="sm" className="gap-1.5">
                   <Plus className="h-4 w-4" /> Sell Gear
