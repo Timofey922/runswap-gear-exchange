@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, X } from 'lucide-react';
+import BrandInput from '@/components/BrandInput';
 import { CATEGORIES, CONDITIONS, type ListingFilters } from '@/types/listing';
 
 interface Props {
