@@ -50,11 +50,11 @@ const FilterBar = ({ filters, onChange }: Props) => {
           </SelectContent>
         </Select>
 
-        <Input
+        <BrandInput
+          value={filters.brand}
+          onChange={(v) => update('brand', v)}
           placeholder="Brand"
           className="w-[120px] h-9 text-sm"
-          value={filters.brand}
-          onChange={(e) => update('brand', e.target.value)}
         />
 
         <Input

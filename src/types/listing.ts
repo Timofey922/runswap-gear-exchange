@@ -46,8 +46,3 @@ export const CONDITIONS: { value: Condition; label: string }[] = [
   { value: 'good', label: 'Good' },
   { value: 'fair', label: 'Fair' },
 ];
-  { value: 'new', label: 'New' },
-  { value: 'like-new', label: 'Like New' },
-  { value: 'good', label: 'Good' },
-  { value: 'fair', label: 'Fair' },
-];
