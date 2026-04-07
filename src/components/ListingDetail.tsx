@@ -1,9 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import type { Listing } from '@/types/listing';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mail, Tag, Footprints, Clock } from 'lucide-react';
+import { MessageCircle, Tag, Footprints, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { useAuth } from '@/hooks/useAuth';
+import { useStartConversation } from '@/hooks/useChat';
+import { toast } from 'sonner';
 
 const categoryIcon: Record<string, string> = {
   shoes: '👟', apparel: '👕', watches: '⌚', accessories: '🎒',
@@ -16,9 +20,31 @@ interface Props {
 }
 
 const ListingDetail = ({ listing, open, onClose }: Props) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const startConvo = useStartConversation();
+
   if (!listing) return null;
 
-  const mailto = `mailto:${listing.seller_email}?subject=${encodeURIComponent(`Interested in: ${listing.title}`)}&body=${encodeURIComponent(`Hi, I'm interested in your listing "${listing.title}" on PaceMarket. Is it still available?`)}`;
+  const isOwner = user?.id === listing.user_id;
+
+  const handleMessage = async () => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    if (!listing.user_id) {
+      toast.error('Cannot message this seller');
+      return;
+    }
+    try {
+      const convo = await startConvo.mutateAsync({ sellerId: listing.user_id, listingId: listing.id });
+      onClose();
+      navigate(`/messages/${convo.id}`);
+    } catch {
+      toast.error('Failed to start conversation');
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -63,11 +89,11 @@ const ListingDetail = ({ listing, open, onClose }: Props) => {
             <p className="text-sm text-foreground leading-relaxed">{listing.description}</p>
           )}
 
-          <a href={mailto} className="block">
-            <Button className="w-full gap-2">
-              <Mail className="h-4 w-4" /> Contact Seller
+          {!isOwner && (
+            <Button onClick={handleMessage} className="w-full gap-2" disabled={startConvo.isPending}>
+              <MessageCircle className="h-4 w-4" /> Message Seller
             </Button>
-          </a>
+          )}
         </div>
       </DialogContent>
     </Dialog>
