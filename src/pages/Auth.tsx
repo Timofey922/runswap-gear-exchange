@@ -131,7 +131,7 @@ const Auth = () => {
           <CardHeader className="text-center">
             <CardTitle>{isLogin ? 'Sign In' : 'Create Account'}</CardTitle>
             <CardDescription>
-              {isLogin ? 'Welcome back to RunSwap' : 'Join RunSwap to start selling'}
+              {isLogin ? 'Welcome back to PaceMarket' : 'Join PaceMarket to start selling'}
             </CardDescription>
           </CardHeader>
           <CardContent>
