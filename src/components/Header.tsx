@@ -18,9 +18,9 @@ const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-sm font-bold text-primary-foreground">RS</span>
+            <span className="text-sm font-bold text-primary-foreground">PM</span>
           </div>
-          <span className="text-xl font-bold text-foreground">RunSwap</span>
+          <span className="text-xl font-bold text-foreground">PaceMarket</span>
         </Link>
         <div className="flex items-center gap-2">
           {user ? (
