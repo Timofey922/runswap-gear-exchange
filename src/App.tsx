@@ -8,6 +8,8 @@ import Index from "./pages/Index.tsx";
 import Sell from "./pages/Sell.tsx";
 import Auth from "./pages/Auth.tsx";
 import MyListings from "./pages/MyListings.tsx";
+import Profile from "./pages/Profile.tsx";
+import Messages from "./pages/Messages.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
