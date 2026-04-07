@@ -47,6 +47,11 @@ const Header = () => {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
+                    <Link to="/profile" className="gap-2 cursor-pointer">
+                      <User className="h-4 w-4" /> My Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/my-listings" className="gap-2 cursor-pointer">
                       <List className="h-4 w-4" /> My Listings
                     </Link>

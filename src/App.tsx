@@ -26,6 +26,10 @@ const App = () => (
             <Route path="/sell" element={<Sell />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/my-listings" element={<MyListings />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:conversationId" element={<Messages />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
