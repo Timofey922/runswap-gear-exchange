@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, User, LogOut, List } from 'lucide-react';
+import { Plus, User, LogOut, List, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import {
   DropdownMenu,
@@ -25,6 +25,11 @@ const Header = () => {
         <div className="flex items-center gap-2">
           {user ? (
             <>
+              <Link to="/messages">
+                <Button variant="ghost" size="icon" className="rounded-full relative">
+                  <MessageCircle className="h-4 w-4" />
+                </Button>
+              </Link>
               <Link to="/sell">
                 <Button size="sm" className="gap-1.5">
                   <Plus className="h-4 w-4" /> Sell Gear
@@ -41,6 +46,11 @@ const Header = () => {
                     {user.email}
                   </div>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="gap-2 cursor-pointer">
+                      <User className="h-4 w-4" /> My Profile
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/my-listings" className="gap-2 cursor-pointer">
                       <List className="h-4 w-4" /> My Listings

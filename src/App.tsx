@@ -8,6 +8,8 @@ import Index from "./pages/Index.tsx";
 import Sell from "./pages/Sell.tsx";
 import Auth from "./pages/Auth.tsx";
 import MyListings from "./pages/MyListings.tsx";
+import Profile from "./pages/Profile.tsx";
+import Messages from "./pages/Messages.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,10 @@ const App = () => (
             <Route path="/sell" element={<Sell />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/my-listings" element={<MyListings />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:conversationId" element={<Messages />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
