@@ -1,7 +1,7 @@
 import type { Listing } from '@/types/listing';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tag, Footprints } from 'lucide-react';
+import { Tag, Footprints, CheckCircle } from 'lucide-react';
 
 const conditionColor: Record<string, string> = {
   new: 'bg-primary/10 text-primary border-primary/20',
@@ -25,14 +25,19 @@ interface Props {
 const ListingCard = ({ listing, onClick }: Props) => {
   return (
     <Card
-      className="group cursor-pointer overflow-hidden border transition-all hover:shadow-lg hover:-translate-y-0.5"
+      className={`group cursor-pointer overflow-hidden border transition-all hover:shadow-lg hover:-translate-y-0.5 ${listing.sold ? 'opacity-60 grayscale' : ''}`}
       onClick={onClick}
     >
-      <div className="aspect-[4/3] bg-muted flex items-center justify-center text-4xl">
+      <div className="aspect-[4/3] bg-muted flex items-center justify-center text-4xl relative">
         {listing.image_url ? (
           <img src={listing.image_url} alt={listing.title} className="h-full w-full object-cover" />
         ) : (
           <span>{categoryIcon[listing.category] ?? '📦'}</span>
+        )}
+        {listing.sold && (
+          <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
+            <Badge className="bg-muted-foreground text-background text-sm px-3 py-1">SOLD</Badge>
+          </div>
         )}
       </div>
       <CardContent className="p-4 space-y-2">
@@ -57,6 +62,11 @@ const ListingCard = ({ listing, onClick }: Props) => {
           {listing.category === 'shoes' && listing.mileage != null && (
             <Badge variant="outline" className="text-[10px] px-1.5 py-0">
               <Footprints className="h-2.5 w-2.5 mr-0.5" /> {listing.mileage} mi
+            </Badge>
+          )}
+          {listing.strava_verified_mileage != null && (
+            <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/30 text-primary">
+              <CheckCircle className="h-2.5 w-2.5 mr-0.5" /> Strava Verified
             </Badge>
           )}
         </div>

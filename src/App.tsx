@@ -10,6 +10,8 @@ import Auth from "./pages/Auth.tsx";
 import MyListings from "./pages/MyListings.tsx";
 import Profile from "./pages/Profile.tsx";
 import Messages from "./pages/Messages.tsx";
+import Recommendations from "./pages/Recommendations.tsx";
+import StravaCallback from "./pages/StravaCallback.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/messages/:conversationId" element={<Messages />} />
+            <Route path="/recommendations" element={<Recommendations />} />
+            <Route path="/strava/callback" element={<StravaCallback />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

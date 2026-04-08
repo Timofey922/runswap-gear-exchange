@@ -16,6 +16,9 @@ export interface Listing {
   image_url: string | null;
   user_id: string | null;
   created_at: string;
+  sold: boolean;
+  strava_verified_mileage: number | null;
+  strava_gear_id: string | null;
 }
 
 export interface ListingFilters {
