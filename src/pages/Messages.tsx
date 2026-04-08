@@ -43,6 +43,7 @@ const ChatView = ({ conversationId }: { conversationId: string }) => {
   const { user } = useAuth();
   const { data: messages, isLoading } = useMessages(conversationId);
   const sendMessage = useSendMessage();
+  const markRead = useMarkRead();
   const [text, setText] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data: conversations } = useConversations();
