@@ -59,6 +59,13 @@ const ChatView = ({ conversationId }: { conversationId: string }) => {
     }
   }, [messages]);
 
+  // Mark conversation as read when opened
+  useEffect(() => {
+    if (conversationId) {
+      markRead.mutate(conversationId);
+    }
+  }, [conversationId, messages?.length]);
+
   const handleSend = async () => {
     if (!text.trim()) return;
     setText('');
