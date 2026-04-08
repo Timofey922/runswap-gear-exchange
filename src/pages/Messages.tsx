@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import { useAuth } from '@/hooks/useAuth';
 import { useConversations, useMessages, useSendMessage, type Conversation } from '@/hooks/useChat';
 import { useProfile } from '@/hooks/useProfile';
+import { useMarkRead } from '@/hooks/useUnreadMessages';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +43,7 @@ const ChatView = ({ conversationId }: { conversationId: string }) => {
   const { user } = useAuth();
   const { data: messages, isLoading } = useMessages(conversationId);
   const sendMessage = useSendMessage();
+  const markRead = useMarkRead();
   const [text, setText] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data: conversations } = useConversations();
@@ -56,6 +58,13 @@ const ChatView = ({ conversationId }: { conversationId: string }) => {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Mark conversation as read when opened
+  useEffect(() => {
+    if (conversationId) {
+      markRead.mutate(conversationId);
+    }
+  }, [conversationId, messages?.length]);
 
   const handleSend = async () => {
     if (!text.trim()) return;

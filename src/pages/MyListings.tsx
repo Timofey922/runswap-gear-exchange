@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { CATEGORIES, CONDITIONS } from '@/types/listing';
 import type { Listing } from '@/types/listing';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, Loader2, PackageOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, PackageOpen, CheckCircle, Ban } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 
 const MyListings = () => {
@@ -49,6 +49,19 @@ const MyListings = () => {
       toast.success('Listing deleted');
     },
     onError: () => toast.error('Failed to delete listing'),
+  });
+
+  const soldMutation = useMutation({
+    mutationFn: async ({ id, sold }: { id: string; sold: boolean }) => {
+      const { error } = await supabase.from('listings').update({ sold } as any).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: ['my-listings'] });
+      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      toast.success(vars.sold ? 'Marked as sold' : 'Marked as available');
+    },
+    onError: () => toast.error('Failed to update listing'),
   });
 
   const updateMutation = useMutation({
@@ -122,7 +135,7 @@ const MyListings = () => {
         ) : (
           <div className="space-y-3">
             {listings.map((listing) => (
-              <Card key={listing.id}>
+              <Card key={listing.id} className={listing.sold ? 'opacity-60' : ''}>
                 <CardContent className="flex items-center gap-4 p-4">
                   <div className="h-16 w-16 rounded-lg bg-muted flex-shrink-0 overflow-hidden flex items-center justify-center">
                     {listing.image_url ? (
@@ -134,9 +147,27 @@ const MyListings = () => {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-sm text-foreground truncate">{listing.title}</h3>
                     <p className="text-xs text-muted-foreground">{listing.brand} · ${listing.price.toFixed(0)}</p>
-                    <Badge variant="outline" className="text-[10px] mt-1 capitalize">{listing.condition}</Badge>
+                    <div className="flex gap-1.5 mt-1">
+                      <Badge variant="outline" className="text-[10px] capitalize">{listing.condition}</Badge>
+                      {listing.sold && <Badge className="text-[10px] bg-muted-foreground text-background">SOLD</Badge>}
+                      {listing.strava_verified_mileage != null && (
+                        <Badge variant="outline" className="text-[10px] border-primary/30 text-primary">
+                          <CheckCircle className="h-2.5 w-2.5 mr-0.5" /> Verified
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <div className="flex gap-1.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      title={listing.sold ? 'Mark as available' : 'Mark as sold'}
+                      onClick={() => soldMutation.mutate({ id: listing.id, sold: !listing.sold })}
+                      disabled={soldMutation.isPending}
+                    >
+                      {listing.sold ? <Ban className="h-4 w-4" /> : <CheckCircle className="h-4 w-4 text-primary" />}
+                    </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(listing)}>
                       <Pencil className="h-4 w-4" />
                     </Button>

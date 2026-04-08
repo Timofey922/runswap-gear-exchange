@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, User, LogOut, List, MessageCircle } from 'lucide-react';
+import { Plus, User, LogOut, List, MessageCircle, Zap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useUnreadCount } from '@/hooks/useUnreadMessages';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +13,7 @@ import {
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const { data: unreadCount } = useUnreadCount();
 
   return (
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
@@ -28,6 +30,11 @@ const Header = () => {
               <Link to="/messages">
                 <Button variant="ghost" size="icon" className="rounded-full relative">
                   <MessageCircle className="h-4 w-4" />
+                  {unreadCount && unreadCount > 0 ? (
+                    <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  ) : null}
                 </Button>
               </Link>
               <Link to="/sell">
@@ -54,6 +61,21 @@ const Header = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/my-listings" className="gap-2 cursor-pointer">
                       <List className="h-4 w-4" /> My Listings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/messages" className="gap-2 cursor-pointer">
+                      <MessageCircle className="h-4 w-4" /> My Messages
+                      {unreadCount && unreadCount > 0 ? (
+                        <span className="ml-auto text-[10px] bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5">
+                          {unreadCount}
+                        </span>
+                      ) : null}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/recommendations" className="gap-2 cursor-pointer">
+                      <Zap className="h-4 w-4" /> AI Recommendations
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

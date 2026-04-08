@@ -8,21 +8,26 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { CATEGORIES, CONDITIONS } from '@/types/listing';
 import { toast } from 'sonner';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 import BrandInput from '@/components/BrandInput';
 import { useAuth } from '@/hooks/useAuth';
+import { useStrava } from '@/hooks/useStrava';
 
 const Sell = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { isConnected, connect, fetchStravaData } = useStrava();
   const [form, setForm] = useState({
     title: '', brand: '', model: '', category: '', size: '',
     condition: '', mileage: '', price: '', description: '', image_url: '',
   });
+  const [stravaVerified, setStravaVerified] = useState<{ mileage: number; gearId: string } | null>(null);
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -33,9 +38,50 @@ const Sell = () => {
 
   const update = (key: string, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
+  const handleStravaVerify = async () => {
+    if (!isConnected) {
+      connect('/sell');
+      return;
+    }
+
+    setVerifying(true);
+    try {
+      const athlete = await fetchStravaData('athlete');
+      const shoes = athlete?.shoes ?? [];
+
+      // Try to match by brand+model
+      const brandLower = form.brand.toLowerCase();
+      const modelLower = form.model.toLowerCase();
+      
+      let matched = shoes.find((s: any) => {
+        const name = s.name?.toLowerCase() ?? '';
+        return name.includes(brandLower) && (modelLower ? name.includes(modelLower) : true);
+      });
+
+      if (!matched && shoes.length > 0) {
+        // If no exact match, show the closest one
+        matched = shoes.find((s: any) => s.name?.toLowerCase().includes(brandLower));
+      }
+
+      if (matched) {
+        const mileageKm = matched.distance || 0;
+        const mileageMi = Math.round(mileageKm / 1609.34);
+        setStravaVerified({ mileage: mileageMi, gearId: matched.id });
+        update('mileage', mileageMi.toString());
+        toast.success(`Verified: ${matched.name} — ${mileageMi} miles`);
+      } else {
+        toast.info('No matching shoe found in your Strava gear. Make sure the brand/model matches.');
+      }
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to verify with Strava');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from('listings').insert({
+      const insertData: any = {
         title: form.title.trim(),
         brand: form.brand.trim(),
         model: form.model.trim() || null,
@@ -48,7 +94,14 @@ const Sell = () => {
         seller_email: user!.email!,
         image_url: form.image_url.trim() || null,
         user_id: user!.id,
-      });
+      };
+
+      if (stravaVerified) {
+        insertData.strava_verified_mileage = stravaVerified.mileage;
+        insertData.strava_gear_id = stravaVerified.gearId;
+      }
+
+      const { error } = await supabase.from('listings').insert(insertData);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -120,7 +173,34 @@ const Sell = () => {
 
               <div className="space-y-1.5">
                 <Label htmlFor="mileage">Mileage (miles)</Label>
-                <Input id="mileage" type="number" placeholder="e.g. 150" value={form.mileage} onChange={(e) => update('mileage', e.target.value)} />
+                <div className="flex gap-2">
+                  <Input
+                    id="mileage"
+                    type="number"
+                    placeholder="e.g. 150"
+                    value={form.mileage}
+                    onChange={(e) => { update('mileage', e.target.value); setStravaVerified(null); }}
+                    className="flex-1"
+                  />
+                  {form.category === 'shoes' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleStravaVerify}
+                      disabled={verifying || !form.brand}
+                      className="whitespace-nowrap text-xs gap-1"
+                    >
+                      {verifying ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle className="h-3 w-3" />}
+                      Verify Strava
+                    </Button>
+                  )}
+                </div>
+                {stravaVerified && (
+                  <Badge variant="outline" className="mt-1 text-[10px] border-primary/30 text-primary gap-1">
+                    <CheckCircle className="h-2.5 w-2.5" /> Strava verified: {stravaVerified.mileage} mi
+                  </Badge>
+                )}
               </div>
 
               <div className="space-y-1.5">

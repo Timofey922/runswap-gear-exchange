@@ -3,7 +3,7 @@ import type { Listing } from '@/types/listing';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Tag, Footprints, Clock } from 'lucide-react';
+import { MessageCircle, Tag, Footprints, Clock, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
 import { useStartConversation } from '@/hooks/useChat';
@@ -50,21 +50,36 @@ const ListingDetail = ({ listing, open, onClose }: Props) => {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-lg">{listing.title}</DialogTitle>
+          <DialogTitle className="text-lg flex items-center gap-2">
+            {listing.title}
+            {listing.sold && <Badge className="bg-muted-foreground text-background">SOLD</Badge>}
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="aspect-video bg-muted rounded-lg flex items-center justify-center text-5xl">
+        <div className="aspect-video bg-muted rounded-lg flex items-center justify-center text-5xl relative">
           {listing.image_url ? (
             <img src={listing.image_url} alt={listing.title} className="h-full w-full object-cover rounded-lg" />
           ) : (
             <span>{categoryIcon[listing.category] ?? '📦'}</span>
+          )}
+          {listing.sold && (
+            <div className="absolute inset-0 bg-background/50 rounded-lg flex items-center justify-center">
+              <Badge className="bg-muted-foreground text-background text-lg px-4 py-2">SOLD</Badge>
+            </div>
           )}
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-2xl font-bold text-primary">${listing.price.toFixed(2)}</span>
-            <Badge variant="secondary" className="capitalize">{listing.condition}</Badge>
+            <div className="flex gap-1.5">
+              <Badge variant="secondary" className="capitalize">{listing.condition}</Badge>
+              {listing.strava_verified_mileage != null && (
+                <Badge variant="outline" className="border-primary/30 text-primary gap-1">
+                  <CheckCircle className="h-3 w-3" /> Strava Verified ({listing.strava_verified_mileage} mi)
+                </Badge>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
@@ -89,10 +104,14 @@ const ListingDetail = ({ listing, open, onClose }: Props) => {
             <p className="text-sm text-foreground leading-relaxed">{listing.description}</p>
           )}
 
-          {!isOwner && (
+          {!isOwner && !listing.sold && (
             <Button onClick={handleMessage} className="w-full gap-2" disabled={startConvo.isPending}>
               <MessageCircle className="h-4 w-4" /> Message Seller
             </Button>
+          )}
+
+          {listing.sold && !isOwner && (
+            <p className="text-center text-sm text-muted-foreground">This item has been sold.</p>
           )}
         </div>
       </DialogContent>
