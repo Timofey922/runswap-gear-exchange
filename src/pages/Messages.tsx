@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import { useAuth } from '@/hooks/useAuth';
 import { useConversations, useMessages, useSendMessage, type Conversation } from '@/hooks/useChat';
 import { useProfile } from '@/hooks/useProfile';
+import { useMarkRead } from '@/hooks/useUnreadMessages';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
